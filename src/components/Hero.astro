@@ -1,0 +1,276 @@
+---
+// Hero.astro - Above-the-fold hero section with headline, why-claim copy, image, and form slot
+---
+
+<section id="claim-section" class="hero-section" aria-labelledby="hero-heading">
+  <div class="hero-container">
+    <!-- Left / Primary Content Column -->
+    <div class="hero-content">
+      <div class="offer-pill">
+        <span class="pill-badge">Welcome Offer</span>
+        <span class="pill-text">Sector 104 Exclusive</span>
+      </div>
+
+      <h1 id="hero-heading" class="hero-title">
+        Get <span class="highlight">₹150 OFF</span> your next visit
+      </h1>
+
+      <p class="hero-subtitle">
+        Single-origin pour-overs, slow-ferment sourdough bakes, and peaceful mornings in Sector 104.
+      </p>
+
+      <!-- Mobile Supporting Visual: compact so CTA remains strictly above the fold -->
+      <div class="hero-visual mobile-only">
+        <picture>
+          <source srcset="/images/hero-coffee.webp" type="image/webp" />
+          <img
+            src="/images/hero-coffee.jpg"
+            alt="Artisanal pour-over coffee and fresh bakes served at Morrow Café"
+            width="480"
+            height="716"
+            fetchpriority="high"
+            loading="eager"
+            decoding="async"
+            class="hero-img"
+          />
+        </picture>
+      </div>
+
+      <!-- SLOT: CLAIM FORM (Populated by interactive form component) -->
+      <div class="form-slot-wrapper">
+        <slot name="claim-form">
+          <!-- Fallback CTA placeholder if no slot injected -->
+          <div class="cta-placeholder-box">
+            <a href="#claim-form-anchor" class="primary-cta-button">
+              Claim ₹150 OFF
+            </a>
+            <p class="cta-microcopy">
+              <span>⚡ Instant claim code</span>
+              <span>•</span>
+              <span>No spam guarantee</span>
+            </p>
+          </div>
+        </slot>
+      </div>
+    </div>
+
+    <!-- Desktop Supporting Visual: intentional vertical portrait column -->
+    <div class="hero-visual desktop-only">
+      <picture>
+        <source srcset="/images/hero-coffee.webp" type="image/webp" />
+        <img
+          src="/images/hero-coffee.jpg"
+          alt="Artisanal pour-over coffee and fresh bakes served at Morrow Café"
+          width="480"
+          height="716"
+          fetchpriority="high"
+          loading="eager"
+          decoding="async"
+          class="hero-img"
+        />
+      </picture>
+      <div class="image-caption-tag" aria-hidden="true">
+        <span>Handcrafted in Sector 104</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero-section {
+    padding: var(--space-3) var(--space-4) var(--space-6);
+  }
+
+  .hero-container {
+    max-width: 1120px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .hero-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .offer-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    align-self: flex-start;
+    background-color: var(--color-primary-tint);
+    border: 1px solid rgba(158, 67, 11, 0.2);
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+  }
+
+  .pill-badge {
+    background-color: var(--color-primary);
+    color: var(--color-primary-text);
+    padding: 2px 6px;
+    border-radius: var(--radius-full);
+    font-size: 0.6875rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .pill-text {
+    color: var(--color-primary);
+  }
+
+  .hero-title {
+    font-size: clamp(1.75rem, 6vw, 2.75rem);
+    line-height: var(--line-height-tight);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: -0.03em;
+    color: var(--color-text);
+  }
+
+  .hero-title .highlight {
+    color: var(--color-primary);
+    position: relative;
+    white-space: nowrap;
+  }
+
+  .hero-subtitle {
+    font-size: var(--font-size-base);
+    color: var(--color-text-muted);
+    line-height: var(--line-height-normal);
+    max-width: 52ch;
+  }
+
+  /* Image Containers */
+  .hero-visual {
+    position: relative;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background-color: var(--color-surface-subtle);
+  }
+
+  .hero-visual picture {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 90%;
+    border-radius: var(--radius-lg);
+  }
+
+  /* Mobile-specific compact presentation to preserve above-the-fold CTA */
+  .mobile-only {
+    display: block;
+    aspect-ratio: 2 / 1;
+    max-height: 140px;
+    margin: var(--space-1) 0;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .desktop-only {
+    display: none;
+  }
+
+  /* Form / CTA Slot */
+  .form-slot-wrapper {
+    margin-top: var(--space-2);
+  }
+
+  .cta-placeholder-box {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .primary-cta-button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 48px;
+    padding: var(--space-3) var(--space-6);
+    background-color: var(--color-primary);
+    color: var(--color-primary-text);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-bold);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    transition: background-color var(--transition-fast), transform var(--transition-fast);
+    text-align: center;
+  }
+
+  .primary-cta-button:hover {
+    background-color: var(--color-primary-hover);
+    transform: translateY(-1px);
+  }
+
+  .primary-cta-button:active {
+    transform: translateY(0);
+  }
+
+  .cta-microcopy {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+  }
+
+  /* Tablet & Desktop Layouts */
+  @media (min-width: 768px) {
+    .hero-section {
+      padding: var(--space-8) var(--space-6);
+    }
+
+    .hero-subtitle {
+      font-size: var(--font-size-lg);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero-section {
+      padding: var(--space-10) var(--space-8);
+    }
+
+    .hero-container {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: var(--space-10);
+      align-items: center;
+    }
+
+    .mobile-only {
+      display: none;
+    }
+
+    .desktop-only {
+      display: block;
+      height: 490px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--color-border);
+    }
+
+    .desktop-only .hero-img {
+      height: 100%;
+    }
+
+    .image-caption-tag {
+      position: absolute;
+      bottom: var(--space-3);
+      left: var(--space-3);
+      background-color: rgba(31, 25, 22, 0.75);
+      color: #FFFFFF;
+      padding: var(--space-1) var(--space-3);
+      border-radius: var(--radius-full);
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-bold);
+      backdrop-filter: blur(4px);
+    }
+  }
+</style>

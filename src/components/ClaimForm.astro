@@ -1,0 +1,1014 @@
+---
+// ClaimForm.astro - Accessible, zero-dependency claim form with ticket-style success state
+---
+
+<div class="claim-card" id="claim-card-root">
+  <!-- State 1: Active Claim Form -->
+  <form
+    id="claim-form"
+    class="claim-form"
+    action="/api/claim"
+    method="POST"
+    novalidate
+    aria-labelledby="claim-form-title"
+  >
+    <div class="form-header">
+      <span class="form-step-tag">Quick 1-Step Claim</span>
+      <h2 id="claim-form-title" class="form-heading">
+        Unlock your ₹150 voucher
+      </h2>
+      <p class="form-subheading">
+        Enter details to generate your counter redemption code.
+      </p>
+    </div>
+
+    <!-- Polite Live Region for Form-Level Status Announcements -->
+    <div
+      id="form-status"
+      class="sr-only"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+    ></div>
+
+    <!-- Server / Network Error Banner (Retryable) -->
+    <div
+      id="form-error-banner"
+      class="form-error-banner"
+      role="alert"
+      hidden
+    >
+      <div class="error-banner-body">
+        <span class="error-icon" aria-hidden="true">⚠️</span>
+        <p id="form-error-message" class="error-text">
+          Could not generate voucher. Please try again.
+        </p>
+      </div>
+      <button
+        type="button"
+        id="error-retry-btn"
+        class="error-retry-btn"
+        aria-label="Retry submitting claim"
+      >
+        Retry
+      </button>
+    </div>
+
+    <div class="fields-stack">
+      <!-- Field: Name -->
+      <div class="field-wrapper" id="name-field-group">
+        <label for="claim-name" class="field-label">
+          Your Full Name <span class="required-star" aria-hidden="true">*</span>
+        </label>
+        <input
+          type="text"
+          id="claim-name"
+          name="name"
+          class="field-input"
+          placeholder="e.g. Rohan Verma"
+          autocomplete="name"
+          enterkeyhint="next"
+          required
+          minlength="2"
+          maxlength="60"
+          aria-required="true"
+          aria-invalid="false"
+          aria-describedby="name-error-msg"
+        />
+        <p
+          id="name-error-msg"
+          class="field-error"
+          aria-live="polite"
+        ></p>
+      </div>
+
+      <!-- Field: Phone -->
+      <div class="field-wrapper" id="phone-field-group">
+        <label for="claim-phone" class="field-label">
+          Mobile Number <span class="required-star" aria-hidden="true">*</span>
+        </label>
+        <div class="phone-input-group">
+          <span class="phone-prefix" aria-hidden="true">+91</span>
+          <input
+            type="tel"
+            id="claim-phone"
+            name="phone"
+            class="field-input phone-input"
+            placeholder="98765 43210"
+            inputmode="tel"
+            autocomplete="tel-national"
+            enterkeyhint="done"
+            required
+            aria-required="true"
+            aria-invalid="false"
+            aria-describedby="phone-error-msg"
+          />
+        </div>
+        <p
+          id="phone-error-msg"
+          class="field-error"
+          aria-live="polite"
+        ></p>
+      </div>
+    </div>
+
+    <!-- Submit CTA Button -->
+    <button
+      type="submit"
+      id="claim-submit-btn"
+      class="claim-submit-btn"
+      aria-busy="false"
+    >
+      <span class="btn-spinner" aria-hidden="true"></span>
+      <span class="btn-label">Claim ₹150 OFF</span>
+      <span class="btn-arrow" aria-hidden="true">→</span>
+    </button>
+
+    <div class="form-guarantee-row">
+      <span>⚡ Instant counter code</span>
+      <span aria-hidden="true">•</span>
+      <span>No app download</span>
+      <span aria-hidden="true">•</span>
+      <span>No spam guarantee</span>
+    </div>
+  </form>
+
+  <!-- State 2: Designed Ticket-Style Card (In-place replacement with zero layout jump) -->
+  <div
+    id="claim-success-ticket"
+    class="success-ticket"
+    hidden
+    role="region"
+    aria-labelledby="success-heading"
+  >
+    <!-- Ticket Top Stub -->
+    <div class="ticket-stub">
+      <div class="ticket-brand-row">
+        <span class="ticket-brand">Morrow Café</span>
+        <span class="ticket-loc-pill">Sector 104, Noida</span>
+      </div>
+
+      <!-- Focused Heading for Screen Reader & Keyboard Navigation -->
+      <h2
+        id="success-heading"
+        tabindex="-1"
+        class="ticket-title"
+      >
+        <span class="ticket-check" aria-hidden="true">✓</span>
+        <span>₹150 OFF claimed</span>
+      </h2>
+
+      <p class="ticket-instruction">
+        Show this code when you visit Morrow Café
+      </p>
+    </div>
+
+    <!-- Perforation Divider with Ticket Notches -->
+    <div class="ticket-perforation" aria-hidden="true">
+      <span class="notch notch-left"></span>
+      <span class="dash-line"></span>
+      <span class="notch notch-right"></span>
+    </div>
+
+    <!-- Ticket Bottom Body -->
+    <div class="ticket-body">
+      <span class="code-eyebrow">Your Counter Voucher</span>
+
+      <!-- Large Monospace Claim Code with Generous Letter Spacing -->
+      <div class="code-container">
+        <span
+          id="display-claim-code"
+          class="ticket-code-text"
+          aria-label="Voucher Claim Code"
+        >
+          MORROW-XXXX
+        </span>
+
+        <!-- Copy Code Button with Dedicated ARIA Announcement -->
+        <button
+          type="button"
+          id="copy-code-btn"
+          class="copy-code-btn"
+          aria-label="Copy claim code to clipboard"
+        >
+          <span id="copy-btn-icon" aria-hidden="true">📋</span>
+          <span id="copy-btn-label">Copy code</span>
+        </button>
+      </div>
+
+      <!-- Polite Live Region for Copy Feedback -->
+      <p
+        id="copy-status-msg"
+        class="sr-only"
+        role="status"
+        aria-live="polite"
+      ></p>
+
+      <!-- Valid-Until Line -->
+      <p class="ticket-valid-until">
+        Valid until <strong id="ticket-expiry-date">30 days from today</strong> • Single use per customer
+      </p>
+
+      <button
+        type="button"
+        id="claim-another-btn"
+        class="claim-another-btn"
+      >
+        Claim for another guest or visit
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Container - maintains strict dimension stability across states */
+  .claim-card {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    padding: var(--space-3);
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .form-header {
+    margin-bottom: var(--space-2);
+  }
+
+  .form-step-tag {
+    display: inline-block;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 2px;
+  }
+
+  .form-heading {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text);
+    letter-spacing: -0.02em;
+  }
+
+  .form-subheading {
+    display: none;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    margin-top: 2px;
+  }
+
+  /* Server Error Banner */
+  .form-error-banner[hidden],
+  .success-ticket[hidden] {
+    display: none !important;
+  }
+
+  .form-error-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    background-color: var(--color-error-bg);
+    border: 1px solid rgba(185, 28, 28, 0.25);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-3);
+  }
+
+  .error-banner-body {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .error-icon {
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  .error-text {
+    font-size: var(--font-size-xs);
+    color: var(--color-error);
+    font-weight: var(--font-weight-bold);
+  }
+
+  .error-retry-btn {
+    min-height: 36px;
+    padding: var(--space-1) var(--space-3);
+    background-color: var(--color-error);
+    color: #FFFFFF;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+  }
+
+  .error-retry-btn:hover {
+    background-color: #991b1b;
+  }
+
+  /* Fields */
+  .fields-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
+  }
+
+  .field-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .field-label {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text);
+  }
+
+  .required-star {
+    color: var(--color-primary);
+  }
+
+  .field-input {
+    width: 100%;
+    min-height: 44px;
+    padding: var(--space-2) var(--space-3);
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
+    color: var(--color-text);
+    transition: border-color var(--transition-fast), background-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+
+  .field-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px rgba(158, 67, 11, 0.15);
+  }
+
+  .field-input[aria-invalid="true"] {
+    border-color: var(--color-error);
+    background-color: #FFFDFD;
+  }
+
+  .phone-input-group {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-bg);
+    overflow: hidden;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+
+  .phone-input-group:focus-within {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px rgba(158, 67, 11, 0.15);
+  }
+
+  .phone-input-group.has-error {
+    border-color: var(--color-error);
+  }
+
+  .phone-prefix {
+    padding: 0 var(--space-3);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-muted);
+    background-color: var(--color-surface-subtle);
+    border-right: 1px solid var(--color-border);
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    user-select: none;
+  }
+
+  .phone-input-group .phone-input {
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .field-error {
+    font-size: 0.75rem;
+    color: var(--color-error);
+    font-weight: var(--font-weight-bold);
+    min-height: 16px;
+    line-height: 1.3;
+  }
+
+  /* Submit CTA Button */
+  .claim-submit-btn {
+    width: 100%;
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    background-color: var(--color-primary);
+    color: var(--color-primary-text);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-bold);
+    border-radius: var(--radius-md);
+    padding: var(--space-3) var(--space-4);
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    transition: background-color var(--transition-fast), opacity var(--transition-fast);
+  }
+
+  .claim-submit-btn:not(:disabled):hover {
+    background-color: var(--color-primary-hover);
+  }
+
+  .claim-submit-btn:disabled {
+    opacity: 0.85;
+    cursor: not-allowed;
+  }
+
+  .btn-spinner {
+    display: none;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-top-color: #FFFFFF;
+    border-radius: 50%;
+    animation: spin 600ms linear infinite;
+  }
+
+  .claim-submit-btn[aria-busy="true"] .btn-spinner {
+    display: inline-block;
+  }
+
+  .claim-submit-btn[aria-busy="true"] .btn-arrow {
+    display: none;
+  }
+
+  .form-guarantee-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    font-size: 0.6875rem;
+    color: var(--color-text-muted);
+    margin-top: var(--space-2);
+    text-align: center;
+  }
+
+  /* -----------------------------------------------------------------------
+     Designed Ticket-Style Card State
+     ----------------------------------------------------------------------- */
+  .success-ticket {
+    background: linear-gradient(180deg, #FFFFFF 0%, #FAF6F0 100%);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ticket-stub {
+    padding: var(--space-4) var(--space-4) var(--space-3);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .ticket-brand-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .ticket-brand {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-primary);
+  }
+
+  .ticket-loc-pill {
+    font-size: 0.6875rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-muted);
+    background-color: var(--color-surface-subtle);
+    padding: 1px 8px;
+    border-radius: var(--radius-full);
+  }
+
+  .ticket-title {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    outline: none;
+  }
+
+  .ticket-title:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+
+  .ticket-check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: var(--color-success-bg);
+    color: var(--color-success);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+  }
+
+  .ticket-instruction {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    line-height: var(--line-height-normal);
+  }
+
+  /* Perforation with circular edge notches */
+  .ticket-perforation {
+    display: flex;
+    align-items: center;
+    position: relative;
+    height: 16px;
+    overflow: hidden;
+  }
+
+  .notch {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    position: absolute;
+    top: 1px;
+    z-index: 2;
+  }
+
+  .notch-left {
+    left: -7px;
+  }
+
+  .notch-right {
+    right: -7px;
+  }
+
+  .dash-line {
+    width: 100%;
+    height: 1px;
+    border-top: 2px dashed #D6CABA;
+  }
+
+  .ticket-body {
+    padding: var(--space-3) var(--space-4) var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .code-eyebrow {
+    font-size: 0.6875rem;
+    font-weight: var(--font-weight-bold);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .code-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    background-color: #FFFFFF;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .ticket-code-text {
+    font-family: var(--font-mono);
+    font-size: clamp(1.25rem, 4vw, 1.625rem);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+    letter-spacing: 0.14em;
+    user-select: all;
+  }
+
+  .copy-code-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    padding: 0 var(--space-3);
+    background-color: var(--color-primary-tint);
+    color: var(--color-primary);
+    border: 1px solid rgba(158, 67, 11, 0.25);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    transition: background-color var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+  }
+
+  .copy-code-btn:hover {
+    background-color: var(--color-primary);
+    color: #FFFFFF;
+  }
+
+  .copy-code-btn.copied {
+    background-color: var(--color-success-bg);
+    color: var(--color-success);
+    border-color: rgba(30, 101, 63, 0.35);
+  }
+
+  .ticket-valid-until {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    line-height: 1.4;
+  }
+
+  .ticket-valid-until strong {
+    color: var(--color-text);
+  }
+
+  .claim-another-btn {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+  }
+
+  .claim-another-btn:hover {
+    color: var(--color-text);
+  }
+
+  /* -----------------------------------------------------------------------
+     Animation: Exactly ONE Thoughtful Interaction
+     Form-to-ticket transition (transform/opacity only, ~300ms)
+     + Tiny CTA press micro-response (pure CSS transform: scale(0.98))
+     Wrapped strictly in prefers-reduced-motion: no-preference
+     ----------------------------------------------------------------------- */
+  @media (prefers-reduced-motion: no-preference) {
+    .ticket-entrance {
+      animation: ticketSlideIn 300ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes ticketSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.99);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .claim-submit-btn:active {
+      transform: scale(0.98);
+    }
+
+    .copy-code-btn:active {
+      transform: scale(0.98);
+    }
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @media (min-width: 768px) {
+    .claim-card {
+      padding: var(--space-5);
+    }
+
+    .form-heading {
+      font-size: var(--font-size-lg);
+    }
+
+    .form-subheading {
+      display: block;
+    }
+
+    .fields-stack {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-4);
+    }
+
+    .ticket-code-text {
+      font-size: 1.75rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .claim-card {
+      padding: var(--space-6);
+    }
+  }
+</style>
+
+<script>
+  // Vanilla TypeScript interactive claim flow (Zero dependencies, < 2KB gzipped)
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('claim-form') as HTMLFormElement | null;
+    const ticketView = document.getElementById('claim-success-ticket') as HTMLElement | null;
+    if (!form || !ticketView) return;
+
+    const nameInput = document.getElementById('claim-name') as HTMLInputElement | null;
+    const phoneInput = document.getElementById('claim-phone') as HTMLInputElement | null;
+    const phoneGroup = document.getElementById('phone-field-group')?.querySelector('.phone-input-group');
+    const nameError = document.getElementById('name-error-msg') as HTMLElement | null;
+    const phoneError = document.getElementById('phone-error-msg') as HTMLElement | null;
+    const submitBtn = document.getElementById('claim-submit-btn') as HTMLButtonElement | null;
+    const btnLabel = submitBtn?.querySelector('.btn-label') as HTMLElement | null;
+    const formStatus = document.getElementById('form-status') as HTMLElement | null;
+    const errorBanner = document.getElementById('form-error-banner') as HTMLElement | null;
+    const errorMessage = document.getElementById('form-error-message') as HTMLElement | null;
+    const retryBtn = document.getElementById('error-retry-btn') as HTMLButtonElement | null;
+    const successHeading = document.getElementById('success-heading') as HTMLElement | null;
+    const displayCode = document.getElementById('display-claim-code') as HTMLElement | null;
+    const copyBtn = document.getElementById('copy-code-btn') as HTMLButtonElement | null;
+    const copyBtnLabel = document.getElementById('copy-btn-label') as HTMLElement | null;
+    const copyStatus = document.getElementById('copy-status-msg') as HTMLElement | null;
+    const expiryDateEl = document.getElementById('ticket-expiry-date') as HTMLElement | null;
+    const claimAnotherBtn = document.getElementById('claim-another-btn') as HTMLButtonElement | null;
+
+    let isSubmitting = false;
+
+    // Set dynamic 30-day expiry date on ticket
+    function updateExpiryDate() {
+      if (!expiryDateEl) return;
+      const expiry = new Date();
+      expiry.setDate(expiry.getDate() + 30);
+      expiryDateEl.textContent = expiry.toLocaleDateString('en-IN', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+      });
+    }
+
+    // Sanitize and validate Indian mobile phone: /^[6-9]\d{9}$/
+    function cleanPhone(raw: string): string {
+      let cleaned = raw.replace(/[\s\-\.\(\)]/g, '');
+      if (cleaned.startsWith('+91')) cleaned = cleaned.slice(3);
+      else if (cleaned.startsWith('91') && cleaned.length === 12) cleaned = cleaned.slice(2);
+      else if (cleaned.startsWith('0') && cleaned.length === 11) cleaned = cleaned.slice(1);
+      return cleaned;
+    }
+
+    function validateName(): boolean {
+      if (!nameInput || !nameError) return true;
+      const val = nameInput.value.trim();
+      if (!val) {
+        setNameError('Please enter your full name');
+        return false;
+      }
+      if (val.length < 2) {
+        setNameError('Name must be at least 2 characters');
+        return false;
+      }
+      if (val.length > 60) {
+        setNameError('Name must be under 60 characters');
+        return false;
+      }
+      clearNameError();
+      return true;
+    }
+
+    function setNameError(msg: string) {
+      if (!nameInput || !nameError) return;
+      nameInput.setAttribute('aria-invalid', 'true');
+      nameError.textContent = msg;
+    }
+
+    function clearNameError() {
+      if (!nameInput || !nameError) return;
+      nameInput.setAttribute('aria-invalid', 'false');
+      nameError.textContent = '';
+    }
+
+    function validatePhone(): boolean {
+      if (!phoneInput || !phoneError) return true;
+      const raw = phoneInput.value.trim();
+      if (!raw) {
+        setPhoneError('Please enter your mobile number');
+        return false;
+      }
+      const cleaned = cleanPhone(raw);
+      const indianMobileRegex = /^[6-9]\d{9}$/;
+      if (!indianMobileRegex.test(cleaned)) {
+        setPhoneError('Enter a valid 10-digit Indian mobile number');
+        return false;
+      }
+      clearPhoneError();
+      return true;
+    }
+
+    function setPhoneError(msg: string) {
+      if (!phoneInput || !phoneError) return;
+      phoneInput.setAttribute('aria-invalid', 'true');
+      phoneGroup?.classList.add('has-error');
+      phoneError.textContent = msg;
+    }
+
+    function clearPhoneError() {
+      if (!phoneInput || !phoneError) return;
+      phoneInput.setAttribute('aria-invalid', 'false');
+      phoneGroup?.classList.remove('has-error');
+      phoneError.textContent = '';
+    }
+
+    // Real-time blur listeners
+    nameInput?.addEventListener('blur', () => {
+      if (nameInput.value.trim() !== '') validateName();
+    });
+
+    phoneInput?.addEventListener('blur', () => {
+      if (phoneInput.value.trim() !== '') validatePhone();
+    });
+
+    // Clear error on active input
+    nameInput?.addEventListener('input', () => {
+      if (nameInput.getAttribute('aria-invalid') === 'true') clearNameError();
+    });
+
+    phoneInput?.addEventListener('input', () => {
+      if (phoneInput.getAttribute('aria-invalid') === 'true') clearPhoneError();
+    });
+
+    function setSubmitting(loading: boolean) {
+      isSubmitting = loading;
+      if (!submitBtn || !btnLabel) return;
+
+      submitBtn.disabled = loading;
+      submitBtn.setAttribute('aria-busy', loading ? 'true' : 'false');
+      btnLabel.textContent = loading ? 'Claiming ₹150 OFF...' : 'Claim ₹150 OFF';
+
+      if (loading) {
+        hideErrorBanner();
+        if (formStatus) formStatus.textContent = 'Generating your claim code, please wait...';
+      }
+    }
+
+    function showErrorBanner(msg: string) {
+      if (!errorBanner || !errorMessage) return;
+      errorMessage.textContent = msg;
+      errorBanner.hidden = false;
+      if (formStatus) formStatus.textContent = `Error: ${msg}`;
+    }
+
+    function hideErrorBanner() {
+      if (errorBanner) errorBanner.hidden = true;
+    }
+
+    retryBtn?.addEventListener('click', () => {
+      form.requestSubmit();
+    });
+
+    // Form Submit
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (isSubmitting) return;
+
+      hideErrorBanner();
+
+      const isNameValid = validateName();
+      const isPhoneValid = validatePhone();
+
+      if (!isNameValid || !isPhoneValid) {
+        // Automatically move focus to first invalid element
+        if (!isNameValid && nameInput) {
+          nameInput.focus();
+        } else if (!isPhoneValid && phoneInput) {
+          phoneInput.focus();
+        }
+        if (formStatus) formStatus.textContent = 'Form contains errors. Please check the highlighted fields.';
+        return;
+      }
+
+      setSubmitting(true);
+
+      const payload = {
+        name: nameInput?.value.trim() || '',
+        phone: cleanPhone(phoneInput?.value || ''),
+      };
+
+      try {
+        const response = await fetch('/api/claim', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success && data.claimCode) {
+          // Success State: Replace form in place with designed ticket-style card
+          updateExpiryDate();
+          form.hidden = true;
+          ticketView.hidden = false;
+          ticketView.classList.add('ticket-entrance');
+          if (displayCode) displayCode.textContent = data.claimCode;
+
+          // Move focus to the success heading
+          successHeading?.focus();
+
+          if (formStatus) {
+            formStatus.textContent = `Offer claimed successfully! Your voucher code is ${data.claimCode}. Show this code when you visit Morrow Café.`;
+          }
+        } else {
+          // Server returned 400 or 500 error
+          const errMsg = data.message || 'Something went wrong. Please check your details and try again.';
+          showErrorBanner(errMsg);
+        }
+      } catch {
+        // Network error (offline / connection failure)
+        showErrorBanner('Network error. Please check your connection and tap Retry.');
+      } finally {
+        setSubmitting(false);
+      }
+    });
+
+    // Clipboard copy with robust fallback & aria-live feedback
+    copyBtn?.addEventListener('click', async () => {
+      const code = displayCode?.textContent?.trim() || '';
+      if (!code) return;
+
+      let copied = false;
+      if (navigator.clipboard && window.isSecureContext) {
+        try {
+          await navigator.clipboard.writeText(code);
+          copied = true;
+        } catch {
+          copied = false;
+        }
+      }
+
+      // Fallback for non-secure context or older webviews
+      if (!copied) {
+        const textArea = document.createElement('textarea');
+        textArea.value = code;
+        textArea.style.position = 'fixed';
+        textArea.style.opacity = '0';
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+          copied = document.execCommand('copy');
+        } catch {
+          copied = false;
+        }
+        document.body.removeChild(textArea);
+      }
+
+      if (copied) {
+        if (copyBtnLabel) copyBtnLabel.textContent = 'Copied';
+        copyBtn.classList.add('copied');
+        if (copyStatus) copyStatus.textContent = `Code ${code} copied to clipboard`;
+
+        setTimeout(() => {
+          if (copyBtnLabel) copyBtnLabel.textContent = 'Copy code';
+          copyBtn.classList.remove('copied');
+        }, 2200);
+      }
+    });
+
+    // Reset to claim another code
+    claimAnotherBtn?.addEventListener('click', () => {
+      ticketView.hidden = true;
+      ticketView.classList.remove('ticket-entrance');
+      form.hidden = false;
+      if (nameInput) nameInput.value = '';
+      if (phoneInput) phoneInput.value = '';
+      clearNameError();
+      clearPhoneError();
+      hideErrorBanner();
+      nameInput?.focus();
+    });
+  });
+</script>

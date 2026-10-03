@@ -1,0 +1,87 @@
+---
+// Header.astro - Landmark header with branding and location pill
+---
+
+<header class="site-header">
+  <div class="header-container">
+    <a href="/" class="brand-link" aria-label="Morrow Café home">
+      <span class="brand-name">Morrow Café</span>
+    </a>
+    <div class="location-badge" aria-label="Café location">
+      <span class="location-dot" aria-hidden="true"></span>
+      <span>Sector 104, Noida</span>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    width: 100%;
+    border-bottom: 1px solid var(--color-border);
+    background-color: rgba(250, 247, 242, 0.92);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .header-container {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: var(--space-3) var(--space-4);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 56px;
+  }
+
+  .brand-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--color-text);
+  }
+
+  .brand-name {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+  }
+
+  .location-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-muted);
+    background-color: var(--color-surface-subtle);
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-full);
+    border: 1px solid var(--color-border);
+    white-space: nowrap;
+  }
+
+  .location-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: var(--radius-full);
+    background-color: var(--color-primary);
+  }
+
+  @media (min-width: 768px) {
+    .header-container {
+      padding: var(--space-4) var(--space-6);
+    }
+
+    .brand-name {
+      font-size: var(--font-size-xl);
+    }
+
+    .location-badge {
+      font-size: var(--font-size-sm);
+    }
+  }
+</style>

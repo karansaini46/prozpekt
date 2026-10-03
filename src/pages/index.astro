@@ -1,0 +1,116 @@
+---
+// index.astro - Morrow Café Campaign Landing Page (Prerendered)
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import ClaimForm from '../components/ClaimForm.astro';
+import HowItWorks from '../components/HowItWorks.astro';
+import Ambiance from '../components/Ambiance.astro';
+import Terms from '../components/Terms.astro';
+import Footer from '../components/Footer.astro';
+
+export const prerender = true;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Get ₹150 OFF | Morrow Café — Sector 104, Noida</title>
+    <meta
+      name="description"
+      content="Scan to claim ₹150 OFF your next visit to Morrow Café, Sector 104, Noida. Handcrafted specialty coffees, sourdough pastries, and quiet neighborhood mornings."
+    />
+    <meta name="theme-color" content="#FAF7F2" />
+    <link rel="canonical" href="https://morrowcafe.in/" />
+
+    <!-- OpenGraph / Social Sharing -->
+    <meta property="og:title" content="Get ₹150 OFF | Morrow Café — Sector 104, Noida" />
+    <meta
+      property="og:description"
+      content="Claim ₹150 instant discount for Morrow Café. Specialty brews and artisanal bakes in Sector 104."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://morrowcafe.in/" />
+    <meta property="og:image" content="/images/hero-coffee.jpg" />
+
+    <!-- Performance: Preload Self-Hosted Fonts (Zero Layout Shift) -->
+    <link
+      rel="preload"
+      href="/fonts/plus-jakarta-sans-500.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="preload"
+      href="/fonts/plus-jakarta-sans-700.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
+
+    <!-- Performance: Preload Hero Image WebP -->
+    <link
+      rel="preload"
+      href="/images/hero-coffee.webp"
+      as="image"
+      type="image/webp"
+      fetchpriority="high"
+    />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body>
+    <!-- Accessibility: Skip Link -->
+    <a href="#claim-section" class="skip-link">Skip to claim offer</a>
+
+    <!-- Landmark Header -->
+    <Header />
+
+    <!-- Landmark Main Content -->
+    <main id="main-content">
+      <Hero>
+        <!-- ======================================================== -->
+        <!-- SLOT: CLAIM FORM                                          -->
+        <!-- Interactive vanilla TypeScript claim form with live       -->
+        <!-- validation, zero-CLS state changes, and instant code copy -->
+        <!-- ======================================================== -->
+        <div slot="claim-form" id="claim-form-anchor">
+          <ClaimForm />
+        </div>
+      </Hero>
+
+      <!-- Below the fold sections -->
+      <HowItWorks />
+      <Ambiance />
+      <Terms />
+    </main>
+
+    <!-- Landmark Footer -->
+    <Footer />
+  </body>
+</html>
+
+<style>
+  /* Accessible Skip Link */
+  .skip-link {
+    position: absolute;
+    top: -999px;
+    left: var(--space-4);
+    background-color: var(--color-primary);
+    color: var(--color-primary-text);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-md);
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-sm);
+    z-index: 1000;
+    transition: top var(--transition-fast);
+  }
+
+  .skip-link:focus-visible {
+    top: var(--space-4);
+  }
+</style>

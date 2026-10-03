@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- Steam curls -->
+  <path d="M10 6C9.5 4.5 10.5 3 11.5 2M15 6C14.5 4.5 15.5 3 16.5 2M20 6C19.5 4.5 20.5 3 21.5 2" stroke="#9E430B" stroke-width="1.75" stroke-linecap="round"/>
+  <!-- Cup body -->
+  <path d="M6 10H22V19C22 22.3137 19.3137 25 16 25H12C8.68629 25 6 22.3137 6 19V10Z" fill="#9E430B"/>
+  <!-- Cup handle -->
+  <path d="M22 12H24.5C25.8807 12 27 13.1193 27 14.5C27 15.8807 25.8807 17 24.5 17H22" stroke="#9E430B" stroke-width="2.25" stroke-linecap="round"/>
+  <!-- Saucer plate -->
+  <path d="M4 27H26" stroke="#9E430B" stroke-width="2" stroke-linecap="round"/>
+</svg>

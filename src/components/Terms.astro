@@ -1,0 +1,72 @@
+---
+// Terms.astro - Campaign terms, validity, and fair-use conditions
+---
+
+<section class="terms-section" aria-labelledby="terms-heading">
+  <div class="terms-container">
+    <div class="terms-box">
+      <h2 id="terms-heading" class="terms-title">Campaign Terms & Details</h2>
+      <ul class="terms-list" role="list">
+        <li>
+          <strong>Offer:</strong> ₹150 flat discount on orders above ₹300 across all beverages, bakes, and kitchen plates.
+        </li>
+        <li>
+          <strong>Validity:</strong> Code remains active for 30 calendar days from the date of generation.
+        </li>
+        <li>
+          <strong>Limit:</strong> Strictly one code redemption per person / mobile number.
+        </li>
+        <li>
+          <strong>Redemption:</strong> Please present your unique alphanumeric claim code to our counter team prior to bill settlement.
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .terms-section {
+    padding: var(--space-4) var(--space-4) var(--space-8);
+  }
+
+  .terms-container {
+    max-width: 1120px;
+    margin: 0 auto;
+  }
+
+  .terms-box {
+    background-color: var(--color-surface-subtle);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+  }
+
+  .terms-title {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text);
+    margin-bottom: var(--space-3);
+  }
+
+  .terms-list {
+    list-style: disc;
+    padding-left: var(--space-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    line-height: var(--line-height-normal);
+  }
+
+  .terms-list strong {
+    color: var(--color-text);
+    font-weight: var(--font-weight-bold);
+  }
+
+  @media (min-width: 768px) {
+    .terms-box {
+      padding: var(--space-6) var(--space-8);
+    }
+  }
+</style>

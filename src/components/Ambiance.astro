@@ -1,0 +1,177 @@
+---
+// Ambiance.astro - Ambiance and artisanal craft section highlighting Sector 104 space
+---
+
+<section class="ambiance-section" aria-labelledby="ambiance-heading">
+  <div class="ambiance-container">
+    <div class="ambiance-card">
+      <div class="ambiance-visual">
+        <picture>
+          <source srcset="/images/cafe-interior.webp" type="image/webp" />
+          <img
+            src="/images/cafe-interior.jpg"
+            alt="Warm modern interior of Morrow Café in Sector 104 with espresso bar and wooden seating"
+            width="1024"
+            height="702"
+            loading="lazy"
+            decoding="async"
+            class="ambiance-img"
+          />
+        </picture>
+      </div>
+
+      <div class="ambiance-content">
+        <span class="ambiance-eyebrow">The Morrow Experience</span>
+        <h2 id="ambiance-heading" class="ambiance-title">
+          A slower pace in Sector 104
+        </h2>
+        <p class="ambiance-text">
+          We built Morrow Café as a retreat from city rush. From small-batch beans roasted to highlight regional notes to butter-laminated morning croissants, everything is crafted with care and patience.
+        </p>
+
+        <ul class="highlights-list" role="list">
+          <li class="highlight-item">
+            <span class="check-icon" aria-hidden="true">✓</span>
+            <span>Single-origin estate coffees & micro-lots</span>
+          </li>
+          <li class="highlight-item">
+            <span class="check-icon" aria-hidden="true">✓</span>
+            <span>House-baked sourdough, viennoiserie & toasts</span>
+          </li>
+          <li class="highlight-item">
+            <span class="check-icon" aria-hidden="true">✓</span>
+            <span>Sunlit reading corners & dog-friendly outdoor patio</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .ambiance-section {
+    padding: var(--space-8) var(--space-4);
+  }
+
+  .ambiance-container {
+    max-width: 1120px;
+    margin: 0 auto;
+  }
+
+  .ambiance-card {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .ambiance-visual {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background-color: var(--color-surface-subtle);
+  }
+
+  .ambiance-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ambiance-content {
+    padding: var(--space-6) var(--space-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .ambiance-eyebrow {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .ambiance-title {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+  }
+
+  .ambiance-text {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    line-height: var(--line-height-normal);
+  }
+
+  .highlights-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+  }
+
+  .highlight-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: var(--font-size-sm);
+    color: var(--color-text);
+  }
+
+  .check-icon {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+    border-radius: var(--radius-full);
+    background-color: var(--color-success-bg);
+    color: var(--color-success);
+    font-size: 0.6875rem;
+    font-weight: var(--font-weight-bold);
+    flex-shrink: 0;
+  }
+
+  @media (min-width: 768px) {
+    .ambiance-section {
+      padding: var(--space-10) var(--space-6);
+    }
+
+    .ambiance-content {
+      padding: var(--space-8) var(--space-6);
+    }
+
+    .ambiance-title {
+      font-size: var(--font-size-2xl);
+    }
+
+    .ambiance-text {
+      font-size: var(--font-size-base);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .ambiance-card {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+    }
+
+    .ambiance-visual {
+      height: 100%;
+      aspect-ratio: auto;
+    }
+
+    .ambiance-content {
+      padding: var(--space-10) var(--space-8);
+      gap: var(--space-4);
+    }
+  }
+</style>

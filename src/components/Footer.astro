@@ -1,0 +1,181 @@
+---
+// Footer.astro - Landmark footer with cafe location, timings, and neighborhood info
+---
+
+<footer class="site-footer">
+  <div class="footer-container">
+    <div class="footer-brand">
+      <div class="footer-logo">Morrow Café</div>
+      <p class="footer-tagline">
+        Artisanal roastery & neighbourhood kitchen in Sector 104, Noida.
+      </p>
+    </div>
+
+    <div class="footer-meta-grid">
+      <div class="meta-block">
+        <h3 class="meta-heading">Visit Us</h3>
+        <address class="meta-address">
+          Shop 12, Ground Floor, Hazipur Market Road,<br />
+          Sector 104, Noida, UP 201304
+        </address>
+        <a 
+          href="https://maps.google.com/?q=Sector+104+Noida" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          class="map-link"
+          aria-label="Open Morrow Café location in Google Maps (opens in new tab)"
+        >
+          View on Google Maps ↗
+        </a>
+      </div>
+
+      <div class="meta-block">
+        <h3 class="meta-heading">Timings</h3>
+        <p class="meta-text">Tuesday – Sunday</p>
+        <p class="meta-text highlight">8:00 AM – 11:00 PM</p>
+        <p class="meta-text closed-note">Closed on Mondays for roasting</p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="copyright">
+        © {new Date().getFullYear()} Morrow Café. Crafted with care for Noida coffee lovers.
+      </p>
+      <a href="#claim-section" class="back-to-top" aria-label="Back to claim offer">
+        Back to top ↑
+      </a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background-color: #1F1916;
+    color: #FAF7F2;
+    padding: var(--space-8) var(--space-4) var(--space-6);
+    margin-top: auto;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .footer-container {
+    max-width: 1120px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .footer-brand {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .footer-logo {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: -0.02em;
+    color: #FAF7F2;
+  }
+
+  .footer-tagline {
+    font-size: var(--font-size-sm);
+    color: #C8BDB0;
+    max-width: 44ch;
+  }
+
+  .footer-meta-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+    padding: var(--space-5) 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .meta-block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .meta-heading {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #FAF7F2;
+    margin-bottom: var(--space-1);
+  }
+
+  .meta-address,
+  .meta-text {
+    font-style: normal;
+    font-size: var(--font-size-sm);
+    color: #C8BDB0;
+    line-height: var(--line-height-normal);
+  }
+
+  .meta-text.highlight {
+    color: #FAF7F2;
+    font-weight: var(--font-weight-bold);
+  }
+
+  .closed-note {
+    font-size: var(--font-size-xs);
+    color: #9E9287;
+  }
+
+  .map-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    color: #E28F54;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    align-self: flex-start;
+  }
+
+  .map-link:hover {
+    color: #FFFFFF;
+  }
+
+  .footer-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    font-size: var(--font-size-xs);
+    color: #9E9287;
+  }
+
+  .back-to-top {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: #C8BDB0;
+    align-self: flex-start;
+  }
+
+  .back-to-top:hover {
+    color: #FAF7F2;
+  }
+
+  @media (min-width: 768px) {
+    .site-footer {
+      padding: var(--space-12) var(--space-6) var(--space-8);
+    }
+
+    .footer-meta-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-8);
+    }
+
+    .footer-bottom {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+</style>
