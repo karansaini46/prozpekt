@@ -19,7 +19,6 @@ Built with **Astro 5**, **TypeScript**, and **Vanilla CSS** with zero client-sid
 10. [Real Bugs Caught & Resolved](#real-bugs-caught--resolved)
 11. [What I Cut for Time & Future Roadmap](#what-i-cut-for-time--future-roadmap)
 12. [Local Setup, Testing & Deployment Guide](#local-setup-testing--deployment-guide)
-13. [Approximate Time Spent](#approximate-time-spent)
 
 ---
 
@@ -470,8 +469,3 @@ npx vercel --prod
 ```
 The project uses `@astrojs/vercel` out-of-the-box. Vercel automatically detects the build command (`npm run build`) and routes `/api/claim` as a serverless function while serving `/` statically from the global CDN edge.
 
----
-
-## Approximate Time Spent
-
-`TODO: Enter your actual time spent (e.g. 3.5 hours)`
